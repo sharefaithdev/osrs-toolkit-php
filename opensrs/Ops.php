@@ -8,9 +8,6 @@ class Ops
     public $_OPT = '';
     public $_SPACER = ' ';        /* indent character */
     public $_CRLF = "\n";
-    public $_MSGTYPE_STD = 'standard';
-    public $_SESSID;
-    public $_MSGCNT;
     public $CRLF = "\r\n";
     public $_data;
     public $_pointers;
@@ -32,9 +29,6 @@ class Ops
                 $this->_CRLF = '';
             }
         }
-
-        $this->_SESSID = uniqid();
-        $this->_MSGCNT = 0;
     }
 
     /**
@@ -192,10 +186,6 @@ class Ops
      */
     public function encode($array)
     {
-        ++$this->_MSGCNT;
-        $msg_id = intval($this->_SESSID) + $this->_MSGCNT;            /* addition removes the leading zero */
-        $msg_type = $this->_MSGTYPE_STD;
-
         if ($array['protocol']) {
             $array['protocol'] = strtoupper($array['protocol']);
         }
@@ -212,8 +202,6 @@ class Ops
             '<OPS_envelope>'.$this->_CRLF.
             $this->_SPACER.'<header>'.$this->_CRLF.
             $this->_SPACER.$this->_SPACER.'<version>'.$this->_OPS_VERSION.'</version>'.$this->_CRLF.
-            $this->_SPACER.$this->_SPACER.'<msg_id>'.$msg_id.'</msg_id>'.$this->_CRLF.
-            $this->_SPACER.$this->_SPACER.'<msg_type>'.$msg_type.'</msg_type>'.$this->_CRLF.
             $this->_SPACER.'</header>'.$this->_CRLF.
             $this->_SPACER.'<body>'.$this->_CRLF.
             $xml_data_block.$this->_CRLF.
